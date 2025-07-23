@@ -31,7 +31,7 @@ export default function RootLayout({
       <body>
         <StoreProvider>
           <Toaster
-            position="top-left"
+            position="top-right"
             gutter={12}
             containerStyle={{ margin: "4px" }}
             toastOptions={{

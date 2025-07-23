@@ -8,9 +8,12 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import Pagination from "../ui/Pagination";
 import useGetProducts from "@/hooks/useGetProducts";
 import useDeleteProduct from "@/hooks/useDeleteProduct";
+import { SlClose } from "react-icons/sl";
 
 export default function DashProduct() {
   const [openModalAddProduct, setOpenModalAddProduct] = useState(false);
+  const [openModalDeleteProduct, setOpenModalDeleteProduct] = useState(false);
+  const [productId, setProductId] = useState("");
   const {
     products,
     pagination,
@@ -19,7 +22,10 @@ export default function DashProduct() {
     handleSetPage,
     isPending,
   } = useGetProducts();
-  const { handleDeleteProduct } = useDeleteProduct({ fetchProducts });
+  const { handleDeleteProduct } = useDeleteProduct({
+    fetchProducts,
+    setOpenModalDeleteProduct,
+  });
 
   return (
     <>
@@ -99,7 +105,10 @@ export default function DashProduct() {
                     </td>
                     <td className="px-4 py-3 max-sm:hidden">
                       <button
-                        onClick={() => handleDeleteProduct(product._id)}
+                        onClick={() => {
+                          setOpenModalDeleteProduct(true);
+                          setProductId(product._id);
+                        }}
                         className="text-red-600 hover:text-red-800 transition-colors hover:cursor-pointer">
                         Delete
                       </button>
@@ -122,6 +131,35 @@ export default function DashProduct() {
         </>
       )}
 
+      {openModalDeleteProduct && (
+        <Modal
+          size="md"
+          isOpen={openModalDeleteProduct}
+          close={() => setOpenModalDeleteProduct(false)}>
+          <div className="mt-10 flex flex-col items-center">
+            <SlClose size={50} className="text-red-500" />
+            <span className="text-2xl text-gray-900 font-medium mt-4">
+              Confirm product deletion
+            </span>
+            <div className="flex flex-col font-medium mt-2 text-sm text-gray-500 text-center">
+              <span> Are you sure you want to delete this product?</span>
+              <span>This action cannot be undone.</span>
+            </div>
+            <div className="flex items-center gap-3 mt-4">
+              <button
+                onClick={() => setOpenModalDeleteProduct(false)}
+                className="border border-orange-500 bg-orange-50 cursor-pointer text-orange-500 text-sm py-2 px-6 font-medium rounded-md ">
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteProduct(productId)}
+                className="border bg-orange-500 hover:opacity-90 duration-300 transition-opacity cursor-pointer text-white text-sm py-2 px-6 font-medium rounded-md">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
       {openModalAddProduct && (
         <Modal
           size="xl"

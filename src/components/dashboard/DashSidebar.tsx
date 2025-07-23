@@ -28,7 +28,7 @@ export default function DashSidebar() {
         <button
           key={item.key}
           onClick={() => handleClick(item.key)}
-          className={`flex items-center gap-4 px-4 py-3 rounded-md text-base font-medium
+          className={`flex items-center gap-4 px-4 py-3 cursor-pointer rounded-md text-base font-medium
             transition-colors duration-200
             ${
               current === item.key

@@ -89,7 +89,7 @@ export default function ModalCart({ close }: { close: () => void }) {
   return (
     <>
       {carts.length <= 0 ? (
-        <div className="flex flex-col items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center h-[200px]">
           <p className="text-2xl font-bold">Your cart is empty</p>
         </div>
       ) : (

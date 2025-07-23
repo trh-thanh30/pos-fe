@@ -61,10 +61,10 @@ export default function useAddProduct({
         },
       });
       if (res.status === 201) {
-        fetchProducts();
         setLoading(false);
         toast.success(res.data.message);
         close();
+        fetchProducts();
         setFormData({
           name: "",
           description: "",
