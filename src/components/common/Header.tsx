@@ -73,7 +73,7 @@ export default function Header() {
         size="4xl"
         isOpen={openModalOrder}
         close={() => setOpenModalOrder(false)}>
-        <ModalOrders />
+        <ModalOrders close={() => setOpenModalOrder(false)} />
       </Modal>
     </>
   );

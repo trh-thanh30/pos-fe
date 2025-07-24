@@ -5,6 +5,8 @@ import Image from "next/image";
 import { IProduct } from "@/hooks/useGetProducts";
 import api from "@/services/api";
 import LoadingSpinner from "../common/LoadingSpinner";
+import Modal from "../common/Modal";
+import Link from "next/link";
 export interface IOrderItem {
   _id: string;
   productId: IProduct;
@@ -21,9 +23,10 @@ export interface IOrder {
   updatedAt: string;
   __v: number;
 }
-export default function ModalOrders() {
+export default function ModalOrders({ close }: { close: () => void }) {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [openOrderDetails, setOpenOrderDetails] = useState<IOrder | null>(null);
   const handleGetOrders = async () => {
     try {
       setLoading(true);
@@ -40,7 +43,8 @@ export default function ModalOrders() {
   useEffect(() => {
     handleGetOrders();
   }, []);
-  console.log(orders);
+
+  console.log(openOrderDetails);
   return (
     <>
       {loading ? (
@@ -85,7 +89,11 @@ export default function ModalOrders() {
                       <span>Date : {order.createdAt.slice(0, 10)} </span>
                       <span>Payment : Pending</span>
                     </div>
-                    <button className="text-sm text-orange-500 font-medium hover:cursor-pointer">
+                    <button
+                      onClick={() => {
+                        setOpenOrderDetails(order);
+                      }}
+                      className="text-sm text-orange-500 font-medium hover:cursor-pointer">
                       View Details
                     </button>
                   </div>
@@ -93,6 +101,52 @@ export default function ModalOrders() {
               ))}
           </div>
         </>
+      )}
+      {openOrderDetails && (
+        <Modal
+          size="4xl"
+          isOpen={!!openOrderDetails}
+          close={() => setOpenOrderDetails(null)}>
+          <>
+            <div className="my-10 flex items-center justify-between">
+              <h1 className="text-2xl text-gray-900 font-medium">
+                Order Details
+              </h1>
+              <span className="text-sm font-medium text-gray-400">
+                Items: {openOrderDetails.items.length}
+              </span>
+            </div>
+            {openOrderDetails.items.map((item, index) => (
+              <Link
+                href={`/products/${item.productId._id}`}
+                key={index}
+                className="flex my-4 bg-gray-100 justify-between items-center hover:bg-gray-200 p-2 rounded-md transition-colors duration-300 cursor-pointer">
+                <div className="flex items-center gap-2">
+                  {item && item.productId.images[0] && (
+                    <Image
+                      src={item.productId.images[0]}
+                      alt={item.name}
+                      width={112}
+                      height={112}
+                      className="w-28 h-28 object-cover rounded-md"
+                    />
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-lg font-medium text-gray-900">
+                      {item.name} x {item.qty}
+                    </span>
+                    <span className="text-xs font-medium text-gray-400">
+                      {item.productId.sku}
+                    </span>
+                  </div>
+                </div>
+                <span className="text-sm font-medium text-gray-900">
+                  {(item.productId.price * item.qty).toLocaleString("vn")}
+                </span>
+              </Link>
+            ))}
+          </>
+        </Modal>
       )}
     </>
   );

@@ -103,15 +103,23 @@ export default function DashProduct() {
                         currency: "VND",
                       })}
                     </td>
-                    <td className="px-4 py-3 max-sm:hidden">
-                      <button
-                        onClick={() => {
-                          setOpenModalDeleteProduct(true);
-                          setProductId(product._id);
-                        }}
-                        className="text-red-600 hover:text-red-800 transition-colors hover:cursor-pointer">
-                        Delete
-                      </button>
+                    <td className="px-4 py-3 max-sm:hidden ">
+                      <div className="flex items-start flex-col gap-1 ">
+                        <button
+                          onClick={() => {
+                            setOpenModalDeleteProduct(true);
+                            setProductId(product._id);
+                          }}
+                          className="text-red-600 hover:text-red-800 transition-colors hover:cursor-pointer">
+                          Delete
+                        </button>
+                        <button className="text-blue-600 hover:text-blue-800 transition-colors hover:cursor-pointer">
+                          Import
+                        </button>
+                        <button className="text-green-500 hover:text-green-800 transition-colors hover:cursor-pointer">
+                          Export
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

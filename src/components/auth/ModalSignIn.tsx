@@ -20,7 +20,10 @@ export default function ModalSignIn({
           setChangeModalForm={setChangeModalForm}
         />
       ) : (
-        <FormModalChangePassword setChangeModalForm={setChangeModalForm} />
+        <FormModalChangePassword
+          onClose={onCloses}
+          setChangeModalForm={setChangeModalForm}
+        />
       )}
     </>
   );
