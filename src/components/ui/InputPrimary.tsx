@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { HTMLInputTypeAttribute, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 interface InputPrimaryProps {
-  type: string;
+  type: HTMLInputTypeAttribute;
   placeholder?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
@@ -14,11 +14,13 @@ interface InputPrimaryProps {
   disabled?: boolean;
   hidden?: boolean;
   defaultValue?: string;
+  required?: boolean;
 }
 
 export default function InputPrimary({
   type,
   label,
+  required,
   placeholder,
   defaultValue,
   onChange,
@@ -54,6 +56,7 @@ export default function InputPrimary({
         </div>
       )}
       <input
+        required={required}
         defaultValue={defaultValue}
         hidden={hidden}
         disabled={disabled}
@@ -63,7 +66,7 @@ export default function InputPrimary({
         autoComplete="off"
         value={value}
         name={name}
-        className={`text-xs disabled:cursor-not-allowed disabled:text-gray-400 disabled:bg-gray-300 text-gray-900 font-medium focus:bg-gray-100 placeholder:font-normal placeholder:text-gray-500 py-2 px-4 w-full
+        className={`text-xs disabled:cursor-not-allowed disabled:text-gray-400 disabled:bg-gray-300 text-gray-900 font-medium focus:bg-gray-50 placeholder:font-normal placeholder:text-gray-500 py-2 px-4 w-full
     rounded-md border border-gray-300
     focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-500
     transition duration-200 ease-in-out

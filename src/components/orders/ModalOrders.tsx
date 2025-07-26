@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useEffect, useState } from "react";
 import order_img from "@/../public/box_icon.adbf0891.svg";
@@ -7,6 +8,11 @@ import api from "@/services/api";
 import LoadingSpinner from "../common/LoadingSpinner";
 import Modal from "../common/Modal";
 import Link from "next/link";
+
+export interface ICreatedBy {
+  username: string;
+  email: string;
+}
 export interface IOrderItem {
   _id: string;
   productId: IProduct;
@@ -18,7 +24,7 @@ export interface IOrder {
   _id: string;
   items: IOrderItem[];
   total: number;
-  createdBy: string;
+  createdBy: ICreatedBy;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -30,7 +36,7 @@ export default function ModalOrders({ close }: { close: () => void }) {
   const handleGetOrders = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/orders");
+      const res = await api.get("/orders/user");
       if (res.status === 200) {
         setLoading(false);
         setOrders(res.data);

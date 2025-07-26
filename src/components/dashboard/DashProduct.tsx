@@ -8,12 +8,19 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import Pagination from "../ui/Pagination";
 import useGetProducts from "@/hooks/useGetProducts";
 import useDeleteProduct from "@/hooks/useDeleteProduct";
-import { SlClose } from "react-icons/sl";
+import ProductModalDelete from "../pos/ProductModalDelete";
+import ProductModalImport from "../pos/ProductModalImport";
+import ProductModalExport from "../pos/ProductModalExport";
 
 export default function DashProduct() {
-  const [openModalAddProduct, setOpenModalAddProduct] = useState(false);
-  const [openModalDeleteProduct, setOpenModalDeleteProduct] = useState(false);
-  const [productId, setProductId] = useState("");
+  const [productId, setProductId] = useState<string>("");
+  const [productName, setProductName] = useState<string>("");
+  const [openModalAddProduct, setOpenModalAddProduct] =
+    useState<boolean>(false);
+  const [openModalDeleteProduct, setOpenModalDeleteProduct] =
+    useState<boolean>(false);
+  const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+  const [openModalExport, setOpenModalExport] = useState<boolean>(false);
   const {
     products,
     pagination,
@@ -22,6 +29,7 @@ export default function DashProduct() {
     handleSetPage,
     isPending,
   } = useGetProducts();
+
   const { handleDeleteProduct } = useDeleteProduct({
     fetchProducts,
     setOpenModalDeleteProduct,
@@ -110,13 +118,25 @@ export default function DashProduct() {
                             setOpenModalDeleteProduct(true);
                             setProductId(product._id);
                           }}
-                          className="text-red-600 hover:text-red-800 transition-colors hover:cursor-pointer">
+                          className="text-slate-400 hover:text-red-600 transition-colors hover:cursor-pointer">
                           Delete
                         </button>
-                        <button className="text-blue-600 hover:text-blue-800 transition-colors hover:cursor-pointer">
+                        <button
+                          onClick={() => {
+                            setOpenModalImport(true);
+                            setProductName(product.name);
+                            setProductId(product._id);
+                          }}
+                          className="text-slate-400 hover:text-slate-600 transition-colors hover:cursor-pointer">
                           Import
                         </button>
-                        <button className="text-green-500 hover:text-green-800 transition-colors hover:cursor-pointer">
+                        <button
+                          onClick={() => {
+                            setOpenModalExport(true);
+                            setProductName(product.name);
+                            setProductId(product._id);
+                          }}
+                          className="text-slate-400 hover:text-slate-600 transition-colors hover:cursor-pointer">
                           Export
                         </button>
                       </div>
@@ -139,41 +159,57 @@ export default function DashProduct() {
         </>
       )}
 
+      {/* DELETE PRODUCT */}
       {openModalDeleteProduct && (
         <Modal
           size="md"
           isOpen={openModalDeleteProduct}
           close={() => setOpenModalDeleteProduct(false)}>
-          <div className="mt-10 flex flex-col items-center">
-            <SlClose size={50} className="text-red-500" />
-            <span className="text-2xl text-gray-900 font-medium mt-4">
-              Confirm product deletion
-            </span>
-            <div className="flex flex-col font-medium mt-2 text-sm text-gray-500 text-center">
-              <span> Are you sure you want to delete this product?</span>
-              <span>This action cannot be undone.</span>
-            </div>
-            <div className="flex items-center gap-3 mt-4">
-              <button
-                onClick={() => setOpenModalDeleteProduct(false)}
-                className="border border-orange-500 bg-orange-50 cursor-pointer text-orange-500 text-sm py-2 px-6 font-medium rounded-md ">
-                Cancel
-              </button>
-              <button
-                onClick={() => handleDeleteProduct(productId)}
-                className="border bg-orange-500 hover:opacity-90 duration-300 transition-opacity cursor-pointer text-white text-sm py-2 px-6 font-medium rounded-md">
-                Confirm
-              </button>
-            </div>
-          </div>
+          <ProductModalDelete
+            setOpenModalDeleteProduct={setOpenModalDeleteProduct}
+            handleDeleteProduct={handleDeleteProduct}
+            productId={productId}
+          />
         </Modal>
       )}
+
+      {/* ADD PRODUCT */}
       {openModalAddProduct && (
         <Modal
           size="xl"
           isOpen={openModalAddProduct}
           close={() => setOpenModalAddProduct(false)}>
           <FormModalAddProduct close={() => setOpenModalAddProduct(false)} />
+        </Modal>
+      )}
+
+      {/* IMPORT PRODUCT */}
+      {openModalImport && (
+        <Modal
+          size="xl"
+          isOpen={openModalImport}
+          close={() => setOpenModalImport(false)}>
+          <ProductModalImport
+            productName={productName}
+            productId={productId}
+            setOpenModalImport={setOpenModalImport}
+            fetchProducts={fetchProducts}
+          />
+        </Modal>
+      )}
+
+      {/* EXPORT PRODUCT */}
+      {openModalExport && (
+        <Modal
+          size="xl"
+          isOpen={openModalExport}
+          close={() => setOpenModalExport(false)}>
+          <ProductModalExport
+            productName={productName}
+            productId={productId}
+            setOpenModalExport={setOpenModalExport}
+            fetchProducts={fetchProducts}
+          />
         </Modal>
       )}
     </>
